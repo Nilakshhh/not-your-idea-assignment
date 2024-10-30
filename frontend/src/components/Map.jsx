@@ -2,13 +2,10 @@ import React, { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
 
-const Map = () => {
+const Map = ({ center, zoom, popupCoords, popupText }) => {
   useEffect(() => {
-    const mapContainer = document.getElementById('map');
-    if (mapContainer && mapContainer._leaflet_id) return;
-
-    // Initialize the map
-    const map = L.map('map').setView([51.505, -0.09], 13);
+    // Initialize the map if it hasn't been initialized already
+    const map = L.map('map').setView(center, zoom);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -17,15 +14,22 @@ const Map = () => {
     // Custom icon setup
     const customIcon = L.icon({
       iconUrl: '/stock.svg', // Path to your custom icon image
-      iconSize: [80, 40], // Set the size of the icon (width, height)
-      iconAnchor: [15, 40], // Point of the icon which will correspond to marker's location
-      popupAnchor: [25, -40], // Position of the popup relative to the icon
+      iconSize: [80, 40],    // Size of the icon
+      iconAnchor: [20, 40],  // Point of the icon that aligns with marker location
+      popupAnchor: [0, -40], // Popup position relative to icon
     });
 
-    L.marker([51.5, -0.09], { icon: customIcon }).addTo(map)
-      .bindPopup('A pretty CSS popup with a custom icon!')
-      .openPopup();
-  }, []);
+    // Add a marker with a popup text
+    const marker = L.marker(popupCoords, { icon: customIcon }).addTo(map)
+      .bindTooltip(popupText, {
+        permanent: false,
+        direction: "top",
+        offset: [0, -10],
+      });
+
+    // Cleanup function to remove map instance on unmount
+    return () => map.remove();
+  }, [center, zoom, popupCoords, popupText]); // Depend on prop values for updates
 
   return (
     <div id="map" style={{ height: "100%", width: "100%" }}></div>
