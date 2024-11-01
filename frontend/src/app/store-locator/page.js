@@ -6,46 +6,50 @@ import Footer from '@/components/Footer';
 import Map from '@/components/Map';
 
 export default function About() {
-    const [center, setCenter] = useState([20.59, 78.96]);
+    const [center, setCenter] = useState([28.70, 77.10]);
     const [selectedDirection, setSelectedDirection] = useState("North");
     const [zoom, setZoom] = useState(5);
+    const [text, setText] = useState("default");
+    const [selectedCity, setSelectedCity] = useState('');
+    const CityData = {
+        VikasPuri: {
+            coordinates: [28.70, 77.10],
+            popup: "This is vikas Puri"
+        },
+        JanakPuri: {
+            coordinates: [28.70, 77.10],
+            popup: "This is janak Puri"
+        },
+        Sonepat: {
+            coordinates: [28.70, 77.10],
+            popup: "This is sonepat"
+        },
+        Chandigarh: {
+            coordinates: [28.70, 77.10],
+            popup: "This is chandigarh"
+        }
+    }
     const stateCityData = {
         North: {
-            California: ["Los Angeles", "San Francisco", "San Diego"],
-            Texas: ["Houston", "Austin", "Dallas"],
-            NewYork: ["New York City", "Buffalo", "Rochester"],
-            Caliornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texs: ["Houston", "Austin", "Dallas"],
-            NeYork: ["New York City", "Buffalo", "Rochester"],
-            NYork: ["New York City", "Buffalo", "Rochester"],
+            Delhi: ["VikasPuri", "Janak Puri"],
+            Punjab: ["Chandigarh"],
+            Haryana: ["Sonepat"],
         },
 
         East: {
-            Caifornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texafs: ["Houston", "Austin", "Dallas"],
-            NewYork: ["New York City", "Buffalo", "Rochester"],
-            Caliornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texs: ["Houston", "Austin", "Dallas"],
-            NeYork: ["New York City", "Buffalo", "Rochester"],
-            NYork: ["New York City", "Buffalo", "Rochester"],
+            Delhi: ["Vikas Puri", "Janak Puri"],
+            Punjab: ["Chandigarh"],
+            Haryana: ["Sonepat"],
         },
         West: {
-            Caifornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texafs: ["Houston", "Austin", "Dallas"],
-            NewYork: ["New York City", "Buffalo", "Rochester"],
-            Caliornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texs: ["Houston", "Austin", "Dallas"],
-            NeYork: ["New York City", "Buffalo", "Rochester"],
-            NYork: ["New York City", "Buffalo", "Rochester"],
+            Delhi: ["Vikas Puri", "Janak Puri"],
+            Punjab: ["Chandigarh"],
+            Haryana: ["Sonepat"],
         },
         South: {
-            Caifornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texafs: ["Houston", "Austin", "Dallas"],
-            NewYork: ["New York City", "Buffalo", "Rochester"],
-            Caliornia: ["Los Angeles", "San Francisco", "San Diego"],
-            Texs: ["Houston", "Austin", "Dallas"],
-            NeYork: ["New York City", "Buffalo", "Rochester"],
-            NYork: ["New York City", "Buffalo", "Rochester"],
+            Delhi: ["Vikas Puri", "Janak Puri"],
+            Punjab: ["Chandigarh"],
+            Haryana: ["Sonepat"],
         },
     };
 
@@ -53,7 +57,7 @@ export default function About() {
         East: [20.59, 85.82],
         West: [20.59, 72.82],
         North: [28.70, 77.10],
-        South: [8.08, 77.55],
+        South: [9.08, 77.55],
     };
 
     const getDirectionName = (coords) => {
@@ -61,9 +65,10 @@ export default function About() {
             (key) => coordinates[key][0] === coords[0] && coordinates[key][1] === coords[1]
         );
     };
-    const [selectedCity, setSelectedCity] = useState('');
-
+    
     const handleCityChange = (event) => {
+        setText(CityData[event.target.value].popup);
+        setCenter(CityData[event.target.value].coordinates);
         setSelectedCity(event.target.value);
     };
 
@@ -81,6 +86,8 @@ export default function About() {
                                 onClick={() => {
                                     setSelectedDirection(direction);
                                     setCenter(coordinates[direction]);
+                                    setText("default")
+                                    setSelectedCity('')
                                     setZoom(6);
                                 }}
                             >
@@ -118,7 +125,7 @@ export default function About() {
                         center={center}
                         zoom={zoom}
                         popupCoords={center}
-                        popupText={`Focused on ${getDirectionName(center)} region`}
+                        popupText={text}
                     />
                 </div>
             </div>
