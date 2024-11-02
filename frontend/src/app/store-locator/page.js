@@ -20,10 +20,10 @@ export default function About() {
     }, []);
 
     const coordinates = {
-        North: [30.00, 80.00],  // Replace with actual default coordinates for North
-        South: [15.00, 80.00],  // Replace with actual default coordinates for South
-        East: [30.00, 90.00],   // Replace with actual default coordinates for East
-        West: [30.00, 70.00]    // Replace with actual default coordinates for West
+        North: [29.40, 76.98],  // Replace with actual default coordinates for North
+        South: [14.07, 77.21],  // Replace with actual default coordinates for South
+        East: [25.59, 85.35],   // Replace with actual default coordinates for East
+        West: [24.44, 75.20]    // Replace with actual default coordinates for West
     };
 
     const stateCityData = directionsData.reduce((acc, direction) => {

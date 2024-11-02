@@ -15,8 +15,8 @@ const Map = ({ center, zoom, popupCoords, popupText }) => {
     const customIcon = L.icon({
       iconUrl: '/stock.svg', // Path to your custom icon image
       iconSize: [80, 40],    // Size of the icon
-      iconAnchor: [0, 0],  // Point of the icon that aligns with marker location
-      popupAnchor: [0, 0], // Popup position relative to icon
+      iconAnchor: [40, 40],  // Point of the icon that aligns with marker location
+      popupAnchor: [0, 40], // Popup position relative to icon
     });
 
     // Add a marker with a popup text
