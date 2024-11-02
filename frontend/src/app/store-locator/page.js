@@ -19,11 +19,12 @@ export default function About() {
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
 
-    // Dynamic coordinates and state-city data based on directionsData
-    const coordinates = directionsData.reduce((acc, direction) => {
-        acc[direction.direction_name] = [20.59, 85.82]; // Set actual default or dynamic values
-        return acc;
-    }, {});
+    const coordinates = {
+        North: [30.00, 80.00],  // Replace with actual default coordinates for North
+        South: [15.00, 80.00],  // Replace with actual default coordinates for South
+        East: [30.00, 90.00],   // Replace with actual default coordinates for East
+        West: [30.00, 70.00]    // Replace with actual default coordinates for West
+    };
 
     const stateCityData = directionsData.reduce((acc, direction) => {
         acc[direction.direction_name] = direction.states.reduce((stateAcc, state) => {
@@ -33,11 +34,21 @@ export default function About() {
         return acc;
     }, {});
 
+    const parseCoordinates = (coordinateString) => {
+        const [latStr, lonStr] = coordinateString.split(', ');
+        const parsePart = (part) => {
+            const [value, direction] = part.split(' ');
+            const decimalValue = parseFloat(value);
+            return direction === 'S' || direction === 'W' ? -decimalValue : decimalValue;
+        };
+        return [parsePart(latStr), parsePart(lonStr)];
+    };
+
     const CityData = directionsData.reduce((acc, direction) => {
         direction.states.forEach(state => {
             state.cities.forEach(city => {
                 acc[city.city_name] = {
-                    coordinates: city.coordinates.split(', ').map(Number), // Ensure correct coordinate format
+                    coordinates: parseCoordinates(city.coordinates), // Parse coordinates here
                     popup: city.additional_info
                 };
             });
@@ -46,9 +57,12 @@ export default function About() {
     }, {});
 
     const handleCityChange = (event) => {
-        setText(CityData[event.target.value].popup);
-        setCenter(CityData[event.target.value].coordinates);
-        setSelectedCity(event.target.value);
+        const cityData = CityData[event.target.value];
+        if (cityData) {
+            setText(cityData.popup);
+            setCenter(cityData.coordinates);
+            setSelectedCity(event.target.value);
+        }
     };
 
     return (
@@ -61,10 +75,13 @@ export default function About() {
                         {Object.keys(coordinates).map((direction) => (
                             <div
                                 key={direction}
-                                className="p-4 bg-black-100 cursor-pointer text-[#020611] hover:border-b-2"
+                                className={`p-4 cursor-pointer ${selectedDirection === direction
+                                        ? "text-green-500 border-b-2 border-green-500"
+                                        : "text-[#020611]"}`
+                                }
                                 onClick={() => {
                                     setSelectedDirection(direction);
-                                    setCenter(coordinates[direction]);
+                                    setCenter(coordinates[direction]);  // Set the center to the default coordinates for the selected direction
                                     setText("default");
                                     setSelectedCity('');
                                     setZoom(6);
