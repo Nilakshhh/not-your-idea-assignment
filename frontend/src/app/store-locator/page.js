@@ -2,7 +2,10 @@
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Map from '@/components/Map';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the Map component to render it only on the client
+const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 
 export default function About() {
     const [center, setCenter] = useState([28.70, 77.10]);
@@ -13,17 +16,17 @@ export default function About() {
     const [directionsData, setDirectionsData] = useState([]);
 
     useEffect(() => {
-        fetch('https://not-your-idea-assignment-backend.onrender.com/api/directions/')  // Adjust URL based on your FastAPI endpoint
+        fetch('https://not-your-idea-assignment-backend.onrender.com/api/directions/')
             .then((response) => response.json())
             .then((data) => setDirectionsData(data))
             .catch((error) => console.error("Error fetching data:", error));
     }, []);
 
     const coordinates = {
-        North: [29.40, 76.98],  // Replace with actual default coordinates for North
-        South: [14.07, 77.21],  // Replace with actual default coordinates for South
-        East: [25.59, 85.35],   // Replace with actual default coordinates for East
-        West: [24.44, 75.20]    // Replace with actual default coordinates for West
+        North: [29.40, 76.98],
+        South: [14.07, 77.21],
+        East: [25.59, 85.35],
+        West: [24.44, 75.20]
     };
 
     const stateCityData = directionsData.reduce((acc, direction) => {
@@ -48,7 +51,7 @@ export default function About() {
         direction.states.forEach(state => {
             state.cities.forEach(city => {
                 acc[city.city_name] = {
-                    coordinates: parseCoordinates(city.coordinates), // Parse coordinates here
+                    coordinates: parseCoordinates(city.coordinates),
                     popup: city.additional_info
                 };
             });
@@ -77,11 +80,10 @@ export default function About() {
                                 key={direction}
                                 className={`p-4 cursor-pointer ${selectedDirection === direction
                                         ? "text-green-500 border-b-2 border-green-500"
-                                        : "text-[#020611]"}`
-                                }
+                                        : "text-[#020611]"}`}
                                 onClick={() => {
                                     setSelectedDirection(direction);
-                                    setCenter(coordinates[direction]);  // Set the center to the default coordinates for the selected direction
+                                    setCenter(coordinates[direction]);
                                     setText("default");
                                     setSelectedCity('');
                                     setZoom(6);
