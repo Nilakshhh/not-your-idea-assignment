@@ -13,7 +13,7 @@ export default function About() {
     const [directionsData, setDirectionsData] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/directions/')  // Adjust URL based on your FastAPI endpoint
+        fetch('https://not-your-idea-assignment-backend.onrender.com/api/directions/')  // Adjust URL based on your FastAPI endpoint
             .then((response) => response.json())
             .then((data) => setDirectionsData(data))
             .catch((error) => console.error("Error fetching data:", error));
